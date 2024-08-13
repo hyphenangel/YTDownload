@@ -2,15 +2,25 @@ import tkinter as tk
 from tkinter import filedialog
 import subprocess
 import os
+import time
 
 def download_video():
     destination = destination_entry.get()
     url = url_entry.get()
     
     yt_dlp_path = os.path.join(os.path.dirname(__file__), 'yt-dlp.exe')
-    command = f'"{yt_dlp_path}" -f bestvideo+bestaudio --merge-output-format mp4 -o "{destination}/%(title)s.%(ext)s" {url}'
+    ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg.exe')
+    command = f'"{yt_dlp_path}" -f bestvideo+bestaudio --merge-output-format mp4 --postprocessor-args "-c:a aac" --ffmpeg-location "{ffmpeg_path}" -o "{destination}/%(title)s.%(ext)s" {url}'
     
     subprocess.run(command, shell=True)
+
+    update_file_modification_time(destination)
+
+def update_file_modification_time(directory):
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        if os.path.isfile(file_path):
+            os.utime(file_path, (time.time(), time.time()))
 
 def browse_destination():
     folder_selected = filedialog.askdirectory()
@@ -37,5 +47,7 @@ url_entry.grid(row=1, column=1, padx=10, pady=10)
 
 download_button = tk.Button(root, text="Download", command=download_video)
 download_button.grid(row=2, column=1, padx=10, pady=20)
+version_label = tk.Label(root, text="v1.1.0\nMade by hyphenangel", font=("Helvetica", 10, "italic"))
+version_label.grid(row=3, column=2, sticky="sw", padx=10, pady=10)
 
 root.mainloop()

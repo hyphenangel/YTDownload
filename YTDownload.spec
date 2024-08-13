@@ -4,7 +4,7 @@
 a = Analysis(
     ['YTDownload.py'],
     pathex=[],
-    binaries=[('yt-dlp.exe', '.')],
+    binaries=[('yt-dlp.exe', '.'), ('ffmpeg.exe', '.')],
     datas=[],
     hiddenimports=[],
     hookspath=[],

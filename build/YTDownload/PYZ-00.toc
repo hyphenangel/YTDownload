@@ -1,4 +1,4 @@
-('C:\\Users\\jerbo\\Documents\\Projects\\YTDownload\\build\\YTDownload\\PYZ-00.pyz',
+('C:\\Users\\jerbo\\Documents\\Projects\\YTDownload\\YTDownload\\build\\YTDownload\\PYZ-00.pyz',
  [('_compat_pickle',
    'C:\\Users\\jerbo\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_compat_pickle.py',
    'PYMODULE'),
