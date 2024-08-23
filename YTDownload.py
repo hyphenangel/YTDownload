@@ -18,13 +18,29 @@ def download_video():
         
     subprocess.run(command, shell=True)
 
-    update_file_modification_time(destination)
+    video_title = get_video_title(url)
+
+    if setting == "Video":
+        ext = "mp4"
+    else:
+        ext = "mp3"
+
+    downloaded_file_path = os.path.join(destination, f"{video_title}.{ext}")
+
+    update_file_modification_time(downloaded_file_path)
 
 def update_file_modification_time(directory):
     for filename in os.listdir(directory):
         file_path = os.path.join(directory, filename)
         if os.path.isfile(file_path):
             os.utime(file_path, (time.time(), time.time()))
+
+def get_video_title(url):
+    yt_dlp_output = subprocess.check_output(
+        [os.path.join(os.path.dirname(__file__), 'yt-dlp.exe'), '--get-title', url],
+        text=True
+    ).strip()
+    return yt_dlp_output
 
 def browse_destination():
     folder_selected = filedialog.askdirectory()
@@ -59,8 +75,8 @@ download_menu = tk.OptionMenu(root, download_var, "Video", "Audio")
 download_menu.grid(row=2, column=1, padx=10, pady=10)
 
 download_button = tk.Button(root, text="Download", command=download_video)
-download_button.grid(row=2, column=1, padx=10, pady=20)
-version_label = tk.Label(root, text="v1.1.0\nMade by hyphenangel", font=("Helvetica", 10, "italic"))
+download_button.grid(row=3, column=1, padx=10, pady=20)
+version_label = tk.Label(root, text="v1.2.2\nMade by hyphenangel", font=("Helvetica", 10, "italic"))
 version_label.grid(row=3, column=2, sticky="sw", padx=10, pady=10)
 
 root.mainloop()
