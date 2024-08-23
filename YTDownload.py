@@ -7,11 +7,15 @@ import time
 def download_video():
     destination = destination_entry.get()
     url = url_entry.get()
+    setting = download_var.get()
     
     yt_dlp_path = os.path.join(os.path.dirname(__file__), 'yt-dlp.exe')
     ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg.exe')
-    command = f'"{yt_dlp_path}" -f bestvideo+bestaudio --merge-output-format mp4 --postprocessor-args "-c:a aac" --ffmpeg-location "{ffmpeg_path}" -o "{destination}/%(title)s.%(ext)s" {url}'
-    
+    if setting == "Video":
+        command = f'"{yt_dlp_path}" -f bestvideo+bestaudio --merge-output-format mp4 --postprocessor-args "-c:a aac" --ffmpeg-location "{ffmpeg_path}" -o "{destination}/%(title)s.%(ext)s" {url}'
+    else:
+        command = f'yt-dlp -f bestaudio --extract-audio --audio-format mp3 --ffmpeg-location "{ffmpeg_path}" -o "{destination}/%(title)s.%(ext)s" {url}'
+        
     subprocess.run(command, shell=True)
 
     update_file_modification_time(destination)
@@ -44,6 +48,15 @@ url_label.grid(row=1, column=0, padx=10, pady=10)
 
 url_entry = tk.Entry(root, width=50)
 url_entry.grid(row=1, column=1, padx=10, pady=10)
+
+download_label = tk.Label(root, text="Download Option:")
+download_label.grid(row=2, column=0, padx=10, pady=10)
+
+download_var = tk.StringVar(root)
+download_var.set("Video")
+
+download_menu = tk.OptionMenu(root, download_var, "Video", "Audio")
+download_menu.grid(row=2, column=1, padx=10, pady=10)
 
 download_button = tk.Button(root, text="Download", command=download_video)
 download_button.grid(row=2, column=1, padx=10, pady=20)
